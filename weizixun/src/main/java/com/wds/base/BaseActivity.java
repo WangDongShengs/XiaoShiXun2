@@ -35,7 +35,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected abstract int getLayout();
 
 
-    protected void Tost(String tost){
-        Toast.makeText(this, tost, Toast.LENGTH_SHORT).show();
+    protected void Toast(String mag){
+        Toast.makeText(this, mag, Toast.LENGTH_SHORT).show();
     }
 }
