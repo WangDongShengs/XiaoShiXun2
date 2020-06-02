@@ -6,6 +6,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.wds.base.BaseActivity;
+import com.wds.base.BaseMVPActivity;
 import com.wds.bean.LoginBean;
 import com.wds.presenter.LoginPresenter;
 import com.wds.view.LoginView;
@@ -14,7 +15,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class MainActivity extends BaseActivity<LoginPresenter, LoginView> implements LoginView {
+public class MainActivity extends BaseMVPActivity<LoginPresenter, LoginView> implements LoginView {
     @BindView(R.id.ed_name)
     EditText edName;
     @BindView(R.id.ed_pass)

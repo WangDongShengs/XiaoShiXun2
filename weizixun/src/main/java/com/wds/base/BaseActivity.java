@@ -7,40 +7,34 @@ import android.widget.Toast;
 
 import butterknife.ButterKnife;
 
-public abstract class BaseActivity<P extends BasePresenter , V extends BaseView> extends AppCompatActivity {
-    protected P presenter;
+public abstract class BaseActivity extends AppCompatActivity {
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(getLayout());
         ButterKnife.bind(this);
-        presenter = initMVPPresenter();
-        if (presenter!=null){
-            presenter.setView(initMVPView());
-        }
+        initMVP();
         initView();
         initData();
     }
 
-    protected abstract V initMVPView();
-
-    protected abstract P initMVPPresenter();
-
-    private void initData() {
+    protected void initMVP() {
 
     }
 
-    private void initView() {
+
+    protected void initData() {
+
+    }
+
+    protected void initView() {
 
     }
 
     protected abstract int getLayout();
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        presenter.onDestroy();
-    }
+
     protected void Tost(String tost){
         Toast.makeText(this, tost, Toast.LENGTH_SHORT).show();
     }
