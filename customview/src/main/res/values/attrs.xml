@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="MyProgressBar">
+        <!--使用系统的宽高属性-->
+        <attr name="android:layout_width"/>
+        <attr name="android:layout_height"/>
+        <!--自定义的-->
+        <!--外环颜色-->
+        <attr name="ringColor" format="color"/>
+        <!--外环宽度-->
+        <attr name="ringWidth" format="dimension"/>
+        <!--内圆颜色-->
+        <attr name="circleColor" format="color"/>
+        <!--进度文本大小颜色-->
+        <attr name="android:textSize"/>
+        <attr name="android:textColor"/>
+        <!--进度 扇形的扫过角度-->
+        <attr name="sweepAngle" format="integer"/>
+        <attr name="startAngle" format="integer"/>
+    </declare-styleable>
+</resources>
