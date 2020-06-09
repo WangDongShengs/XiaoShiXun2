@@ -11,30 +11,18 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
 public class RxUtil {
-    /**
-     * 背压线程切换
-     * @param <T>
-     * @return
-     *//*
-    public static  <T> FlowableTransformer<T,T> rxFlowableTransformer(){
-        return new FlowableTransformer<T, T>() {
-            @Override
-            public Publisher<T> apply(Flowable<T> upstream) {
-                return upstream.subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread());
-            }
-        };
-    }*/
+
     /**
      * 背压线程切换
      * @param <T>
      * @return
      */
-    public static <T> FlowableTransformer<T, T> rxFlowableTransformer() {
+    public static  <T>FlowableTransformer<T,T> rxFlowableTransformer(){
         return new FlowableTransformer<T, T>() {
             @Override
             public Publisher<T> apply(Flowable<T> upstream) {
-                return upstream.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
+                return upstream.subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread());
             }
         };
     }

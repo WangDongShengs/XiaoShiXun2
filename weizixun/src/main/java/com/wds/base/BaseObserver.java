@@ -16,12 +16,13 @@ import java.net.UnknownHostException;
 import io.reactivex.subscribers.ResourceSubscriber;
 import retrofit2.HttpException;
 
-public abstract class BaseObserver <T> extends ResourceSubscriber <T> {
+public abstract class BaseObserver<T> extends ResourceSubscriber<T> {
     @Override
     public void onNext(T t) {
         onSuccess(t);
     }
     public abstract void onSuccess(T t);
+
     @Override
     public void onError(Throwable e) {
         Log.e("TAG", "error:" + e.getMessage());
@@ -50,7 +51,7 @@ public abstract class BaseObserver <T> extends ResourceSubscriber <T> {
         }
     }
 
-    protected  void onFail(String error){
+    protected void onFail(String error){
         Toast.makeText(MyApp.getApp(), error, Toast.LENGTH_SHORT).show();
     }
 
@@ -58,4 +59,5 @@ public abstract class BaseObserver <T> extends ResourceSubscriber <T> {
     public void onComplete() {
 
     }
+
 }

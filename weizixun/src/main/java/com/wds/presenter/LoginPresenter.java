@@ -7,11 +7,11 @@ import com.wds.bean.LoginBean;
 import com.wds.callback.LoginCallBack;
 import com.wds.model.LoginModel;
 
-public class LoginPresenter extends BasePresenter implements ILoginPresenter, LoginCallBack {
+public class LoginPresenter extends BasePresenter implements  LoginCallBack {
 
     private LoginModel loginModel;
 
-    @Override
+
     public void login(String name, String pass) {
         if (TextUtils.isEmpty(name)) {
             view.onFail("name不能为空");

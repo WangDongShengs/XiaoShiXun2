@@ -10,22 +10,24 @@ import com.wds.utils.RxUtil;
 
 import org.reactivestreams.Subscriber;
 
+import io.reactivex.FlowableSubscriber;
 
-public class LoginModel extends BaseModel implements ILoginModel {
-    @Override
+
+public class LoginModel extends BaseModel {
+
     public void loginModel(String name, String pass, final LoginCallBack loginCallBack) {
         HttpManager.getHttpManager()
-                .getService(ApiService.loginUrl,ApiService.class)
-                .getUrl(name,pass)
+                .getService(ApiService.baseUrl, ApiService.class)
+                .login(name, pass)
                 .compose(RxUtil.<LoginBean>rxFlowableTransformer())
-                .subscribe((Subscriber<? super LoginBean>) new BaseObserver<LoginBean>() {
+                .subscribe((FlowableSubscriber<? super LoginBean>) new BaseObserver<LoginBean>() {
                     @Override
                     public void onSuccess(LoginBean loginBean) {
-                        int errorCode = loginBean.getErrorCode();
-                        if (errorCode==0){
+                        String errorCode = loginBean.getCode();
+                        if (errorCode.equals("200")) {
                             loginCallBack.onSuccess(loginBean);
-                        }else {
-                            loginCallBack.onFail("账户密码错误");
+                        } else {
+                            loginCallBack.onFail(loginBean.getMessage());
                         }
                     }
                 });
