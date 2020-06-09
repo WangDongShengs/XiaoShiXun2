@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ChatActivity">
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="#03A9F4"
+        android:gravity="center"
+        android:text="正在聊天"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/et_content"
+        app:layout_constraintTop_toBottomOf="@id/tv_title" />
+
+    <EditText
+        android:id="@+id/et_content"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@id/btN_send"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:hint="...."
+        app:layout_constraintRight_toLeftOf="@id/btN_send"
+        app:layout_constraintTop_toTopOf="@id/btN_send" />
+
+    <Button
+        android:id="@+id/btN_send"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="发送"
+        android:background="#02F747"
+        app:layout_constraintBottom_toTopOf="@id/btn_send_audio"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <Button
+        android:id="@+id/btn_record"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="开始录音"
+        android:background="#DFCDF1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/btn_send_audio" />
+
+    <Button
+        android:id="@+id/btn_send_audio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="发送语音"
+        android:background="#00BCD4"
+        app:layout_constraintBottom_toBottomOf="@id/btn_record"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/btn_record" />
+</android.support.constraint.ConstraintLayout>

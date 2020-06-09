@@ -24,6 +24,8 @@ import com.umeng.socialize.media.UMImage;
 import com.wds.base.BaseMVPActivity;
 import com.wds.bean.LoginBean;
 import com.wds.presenter.LoginPresenter;
+import com.wds.utils.Constants;
+import com.wds.utils.SharedPreferencesUtils;
 import com.wds.view.LoginView;
 
 import java.util.Map;
@@ -99,10 +101,21 @@ public class LoginActivity extends BaseMVPActivity<LoginPresenter, LoginView> im
 
     //Android 6.0 权限适配
     private void initPermission() {
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+        String[] pers = {
+                Manifest.permission.RECORD_AUDIO,
+                Manifest.permission.CAMERA,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.READ_PHONE_STATE,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+        };
+        ActivityCompat.requestPermissions(this, pers, 100);
+
+
+       /* if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
             String[] mp = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
             ActivityCompat.requestPermissions(this, mp, 123);
-        }
+        }*/
     }
 
     @OnClick({R.id.btn_login, R.id.btn_register, R.id.img, R.id.iv_qq, R.id.iv_wx, R.id.iv_sina,R.id.btn_login_im})
@@ -148,6 +161,7 @@ public class LoginActivity extends BaseMVPActivity<LoginPresenter, LoginView> im
                     @Override
                     public void run() {
                         Toast.makeText(LoginActivity.this, "登录成功", Toast.LENGTH_SHORT).show();
+                        SharedPreferencesUtils.setParam(LoginActivity.this, Constants.NAME, name);
                         goToActivity();
                     }
                 });
