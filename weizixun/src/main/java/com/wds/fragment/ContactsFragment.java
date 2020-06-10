@@ -2,9 +2,7 @@ package com.wds.fragment;
 
 
 import android.content.Intent;
-import android.graphics.Canvas;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,8 +11,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.wds.adapter.FrendsAdapter;
+import com.wds.adapter.ContactsAdapter;
 import com.wds.utils.Constants;
+import com.wds.utils.SharedPreferencesUtils;
 import com.wds.weizixun.ChatActivity;
 import com.wds.weizixun.R;
 
@@ -34,7 +33,7 @@ public class ContactsFragment extends Fragment {
     RecyclerView recycler;
     Unbinder unbinder;
     private ArrayList<String> lists;
-    private FrendsAdapter frendsAdapter;
+    private ContactsAdapter contactsAdapter;
 
     public ContactsFragment() {
         // Required empty public constructor
@@ -54,23 +53,28 @@ public class ContactsFragment extends Fragment {
     }
 
     private void initData() {
+        String  curName = (String) SharedPreferencesUtils.getParam(getActivity(), Constants.NAME, "a");
         ArrayList<String> list = new ArrayList<>();
-        list.add("a");
-        list.add("b");
-        list.add("c");
+        if (!curName.equals("a")){
+            list.add("a");
+        }  if (!curName.equals("b")){
+            list.add("b");
+        }  if (!curName.equals("c")){
+            list.add("c");
+        }
         if (lists.size()<=0){
         lists.addAll(list);
         }
-        frendsAdapter.notifyDataSetChanged();
+        contactsAdapter.notifyDataSetChanged();
     }
 
     private void initView() {
         recycler.setLayoutManager(new LinearLayoutManager(getActivity()));
         recycler.addItemDecoration(new DividerItemDecoration(getActivity(),DividerItemDecoration.VERTICAL));
         lists = new ArrayList<>();
-        frendsAdapter = new FrendsAdapter(lists, getActivity());
-        recycler.setAdapter(frendsAdapter);
-        frendsAdapter.setOnClickItem(new FrendsAdapter.onClickItem() {
+        contactsAdapter = new ContactsAdapter(lists, getActivity());
+        recycler.setAdapter(contactsAdapter);
+        contactsAdapter.setOnClickItem(new ContactsAdapter.onClickItem() {
             @Override
             public void item(int i, String name) {
                 Intent intent = new Intent(getActivity(), ChatActivity.class);

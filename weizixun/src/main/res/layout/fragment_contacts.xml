@@ -11,6 +11,4 @@
     app:layout_constraintBottom_toBottomOf="parent"
     android:layout_height="match_parent"
     />
-
-
 </android.support.constraint.ConstraintLayout>

@@ -14,12 +14,12 @@ import com.wds.weizixun.R;
 import java.util.List;
 
 
-public class FrendsAdapter extends RecyclerView.Adapter<FrendsAdapter.ViewHolder> {
+public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHolder> {
 
     private List<String> list;
     private Context context;
 
-    public FrendsAdapter(List<String> list, Context context) {
+    public ContactsAdapter(List<String> list, Context context) {
         this.list = list;
         this.context = context;
     }
@@ -62,7 +62,7 @@ public class FrendsAdapter extends RecyclerView.Adapter<FrendsAdapter.ViewHolder
     }
     onClickItem onClickItem;
 
-    public void setOnClickItem(FrendsAdapter.onClickItem onClickItem) {
+    public void setOnClickItem(ContactsAdapter.onClickItem onClickItem) {
         this.onClickItem = onClickItem;
     }
 

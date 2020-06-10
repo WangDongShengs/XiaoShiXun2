@@ -17,6 +17,16 @@ public abstract class BaseActivity extends AppCompatActivity {
         initMVP();
         initView();
         initData();
+        initReceiver();
+        initHistory();
+    }
+
+    protected void initHistory() {
+
+    }
+
+    protected void initReceiver() {
+
     }
 
     protected void initMVP() {

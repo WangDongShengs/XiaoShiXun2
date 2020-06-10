@@ -11,6 +11,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -83,10 +84,25 @@ public class MainActivity extends BaseActivity {
 
             }
         });
+        nvMain.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                switch (menuItem.getItemId()){
+                    case R.id.zhihu:
+                        break;
+                    case R.id.weixing:
+                        break;
+                    case R.id.qunliao:
+                    startActivity(new Intent(MainActivity.this,ChatGroupActivity.class));
+                        break;
+                }
+                return false;
+            }
+        });
         ImageView img = nvMain.getHeaderView(0).findViewById(R.id.iv_cl_header);
         TextView text = nvMain.getHeaderView(0).findViewById(R.id.tv_cl_header);
         RequestOptions requestOptions = new RequestOptions().circleCrop();
-        Glide.with(this).load(R.mipmap.ic_launcher).apply(requestOptions).into(img);
+        Glide.with(this).load(R.drawable.hander_image).apply(requestOptions).into(img);
         img.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

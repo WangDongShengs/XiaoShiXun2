@@ -6,8 +6,7 @@
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_margin="16dp"
-        android:background="#00BCD4"
-        android:src="@drawable/adm" />
+        android:src="@drawable/ease_default_avatar" />
 
     <TextView
         android:id="@+id/tv_other_name"

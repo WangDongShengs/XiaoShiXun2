@@ -10,9 +10,11 @@ import android.widget.Toast;
 
 import com.hyphenate.EMMessageListener;
 import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMMessage;
 import com.wds.adapter.EMMessageAdapter;
 import com.wds.base.BaseActivity;
+import com.wds.utils.AudioUtil;
 import com.wds.utils.Constants;
 import com.wds.utils.SharedPreferencesUtils;
 
@@ -48,20 +50,99 @@ public class ChatActivity extends BaseActivity {
     }
 
     @Override
+    protected void initView() {
+        super.initView();
+        toName = getIntent().getStringExtra(Constants.NAME);
+        curName = (String) SharedPreferencesUtils.getParam(this, Constants.CURMAME, "a");
+        tvTitle.setText(curName + "正在和" + toName + "聊天中...");
+    }
+
+    @OnClick({R.id.btN_send, R.id.btn_record, R.id.btn_send_audio})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.btN_send:
+                send();
+                break;
+            case R.id.btn_record:
+                record();
+                break;
+            case R.id.btn_send_audio:
+                audioSend();
+                break;
+        }
+    }
+
+    private void audioSend() {
+        //voiceUri为语音文件本地资源标志符，length为录音时间(秒)
+        //EMMessage message = EMMessage.createVoiceSendMessage(voiceUri, length, toChatUsername);
+        //如果是群聊，设置chattype，默认是单聊
+        //message.setChatType(EMMessage.ChatType.GroupChat);
+        //EMClient.getInstance().chatManager().sendMessage(message);
+    }
+
+    private void record() {
+        Boolean isRecording = AudioUtil.isRecording;
+        if (isRecording){
+            btnRecord.setText("开始录音");
+            AudioUtil.stopRecording();
+        }else {
+            btnRecord.setText("停止录音");
+
+        }
+    }
+
+    private void send() {
+        String content = etContent.getText().toString();
+
+        if (content.isEmpty()) {
+            Toast.makeText(ChatActivity.this, "请输入消息", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //创建一条文本消息，content为消息文字内容，toChatUsername为对方用户或者群聊的id，后文皆是如此
+                EMMessage message = EMMessage.createTxtSendMessage(content, toName);
+                //发送消息
+                EMClient.getInstance().chatManager().sendMessage(message);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        list.add(message);
+                        emMessageAdapter.notifyDataSetChanged();
+                        etContent.setText("");
+                    }
+                });
+            }
+        }).start();
+
+    }
+
+    @Override
     protected void initData() {
         super.initData();
-        toName = getIntent().getStringExtra(Constants.NAME);
-        curName = (String) SharedPreferencesUtils.getParam(this, Constants.NAME, "a");
-        tvTitle.setText(curName + "正在和" + toName + "聊天中...");
+        list = new ArrayList<>();
+        rv.setLayoutManager(new LinearLayoutManager(this));
+        emMessageAdapter = new EMMessageAdapter(list, this, toName, curName);
+        rv.setAdapter(emMessageAdapter);
 
-        //
+    }
+
+    @Override
+    protected void initReceiver() {
+        super.initReceiver();
         msgListener = new EMMessageListener() {
 
             @Override
             public void onMessageReceived(List<EMMessage> messages) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        list.addAll(messages);
+                        emMessageAdapter.notifyDataSetChanged();
+                    }
+                });
 
-                list.addAll(messages);
-                emMessageAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -93,16 +174,23 @@ public class ChatActivity extends BaseActivity {
         EMClient.getInstance().chatManager().addMessageListener(msgListener);
     }
 
+
     @Override
-    protected void initView() {
-        super.initView();
-
-
-        list = new ArrayList<>();
-        rv.setLayoutManager(new LinearLayoutManager(this));
-        emMessageAdapter = new EMMessageAdapter(list, this, toName, curName);
-        rv.setAdapter(emMessageAdapter);
+    protected void initHistory() {
+        super.initHistory();
+        EMConversation conversation = EMClient.getInstance().chatManager().getConversation(toName);
+        if (conversation==null){
+            return;
+        }
+        //获取此回话的所有消息
+        List<EMMessage> allMessages = conversation.getAllMessages();
+        if (allMessages.size()<=0){
+            return;
+        }
+        list.addAll(allMessages);
+        emMessageAdapter.notifyDataSetChanged();
     }
+
 
     @Override
     protected void onDestroy() {
@@ -110,43 +198,5 @@ public class ChatActivity extends BaseActivity {
         EMClient.getInstance().chatManager().removeMessageListener(msgListener);
     }
 
-    @OnClick({R.id.btN_send, R.id.btn_record, R.id.btn_send_audio})
-    public void onViewClicked(View view) {
-        switch (view.getId()) {
-            case R.id.btN_send:
-                send();
-                break;
-            case R.id.btn_record:
-                break;
-            case R.id.btn_send_audio:
-                break;
-        }
-    }
 
-    private void send() {
-        String content = etContent.getText().toString();
-
-        if (content.isEmpty()) {
-            Toast.makeText(ChatActivity.this, "请输入消息", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                //创建一条文本消息，content为消息文字内容，toChatUsername为对方用户或者群聊的id，后文皆是如此
-                EMMessage message = EMMessage.createTxtSendMessage(content, toName);
-                //发送消息
-                EMClient.getInstance().chatManager().sendMessage(message);
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        list.add(message);
-                        emMessageAdapter.notifyDataSetChanged();
-                        etContent.setText("");
-                    }
-                });
-            }
-        }).start();
-
-    }
 }

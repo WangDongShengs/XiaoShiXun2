@@ -8,17 +8,16 @@
         android:id="@+id/iv_item_users"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_width="100dp"
-        android:src="@drawable/adm"
-        android:background="#00BCD4"
-        android:layout_height="100dp"
+        android:layout_width="80dp"
+        android:src="@drawable/ease_default_avatar"
+        android:layout_height="80dp"
         />
     <TextView
         android:id="@+id/tv_item_users"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toRightOf="@id/iv_item_users"
         app:layout_constraintBottom_toBottomOf="@id/iv_item_users"
-        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginLeft="50dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         />

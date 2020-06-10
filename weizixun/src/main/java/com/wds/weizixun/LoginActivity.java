@@ -81,7 +81,7 @@ public class LoginActivity extends BaseMVPActivity<LoginPresenter, LoginView> im
         Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
     }
 
-
+    //QQ
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -110,7 +110,6 @@ public class LoginActivity extends BaseMVPActivity<LoginPresenter, LoginView> im
                 Manifest.permission.ACCESS_COARSE_LOCATION
         };
         ActivityCompat.requestPermissions(this, pers, 100);
-
 
        /* if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
             String[] mp = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
@@ -152,6 +151,7 @@ public class LoginActivity extends BaseMVPActivity<LoginPresenter, LoginView> im
         finish();
     }
     private void loginIm(String name, String pass) {
+
         EMClient.getInstance().login(name, pass, new EMCallBack() {
             @Override
             public void onSuccess() {
@@ -161,7 +161,7 @@ public class LoginActivity extends BaseMVPActivity<LoginPresenter, LoginView> im
                     @Override
                     public void run() {
                         Toast.makeText(LoginActivity.this, "登录成功", Toast.LENGTH_SHORT).show();
-                        SharedPreferencesUtils.setParam(LoginActivity.this, Constants.NAME, name);
+                        SharedPreferencesUtils.setParam(LoginActivity.this,Constants.CURMAME, name);
                         goToActivity();
                     }
                 });
@@ -187,7 +187,9 @@ public class LoginActivity extends BaseMVPActivity<LoginPresenter, LoginView> im
     }
 
     private void share() {
+        //图片
         UMImage umImage = new UMImage(this, "http://ww1.sinaimg.cn/large/0065oQSqly1frjd77dt8zj30k80q2aga.jpg");
+        //修改尺寸
         umImage.compressStyle = UMImage.CompressStyle.SCALE;//大小压缩，默认为大小压缩，适合普通很大的图
         new ShareAction(LoginActivity.this)
                 .withText("小妹妹")//文本
@@ -196,7 +198,7 @@ public class LoginActivity extends BaseMVPActivity<LoginPresenter, LoginView> im
                 .setCallback(shareListener)//分享回调
                 .open();
     }
-
+    //回调方法
     private UMShareListener shareListener = new UMShareListener() {
         /**
          * @descrption 分享开始的回调
@@ -235,7 +237,7 @@ public class LoginActivity extends BaseMVPActivity<LoginPresenter, LoginView> im
         }
     };
 
-
+    //第三方登录
     public void login(SHARE_MEDIA media) {
         UMShareAPI umShareAPI = UMShareAPI.get(this);
         //media,三方平台
@@ -295,6 +297,4 @@ public class LoginActivity extends BaseMVPActivity<LoginPresenter, LoginView> im
             Log.e("TAG", "logMap: " + entry.getKey() + "," + entry.getValue());
         }
     }
-
-
 }
