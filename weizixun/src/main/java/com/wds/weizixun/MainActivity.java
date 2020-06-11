@@ -95,6 +95,9 @@ public class MainActivity extends BaseActivity {
                     case R.id.qunliao:
                     startActivity(new Intent(MainActivity.this,ChatGroupActivity.class));
                         break;
+                    case R.id.ditu:
+                    startActivity(new Intent(MainActivity.this,MapActivity.class));
+                        break;
                 }
                 return false;
             }
