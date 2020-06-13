@@ -86,7 +86,7 @@ public class EMMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
                 Log.d(TAG, "localUrl: " + localUrl);
                 if (onItemClick != null) {
-                    onItemClick.onItemClick(localUrl);
+                    onItemClick.onItemClick(localUrl, body);
                 }
             }
         });
@@ -132,7 +132,7 @@ public class EMMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     public interface OnItemClick {
-        void onItemClick(String localUrl);
+        void onItemClick(String localUrl,EMMessageBody emMessageBody);
     }
 
 }

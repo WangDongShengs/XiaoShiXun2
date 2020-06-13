@@ -1,5 +1,7 @@
 package com.wds.weizixun;
 
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -8,10 +10,21 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.baidu.location.BDAbstractLocationListener;
+import com.baidu.location.BDLocation;
+import com.baidu.location.LocationClient;
+import com.baidu.location.LocationClientOption;
+import com.baidu.mapapi.map.BaiduMap;
+import com.baidu.mapapi.map.MapView;
+import com.baidu.mapapi.map.MyLocationData;
 import com.hyphenate.EMMessageListener;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
+import com.hyphenate.chat.EMLocationMessageBody;
 import com.hyphenate.chat.EMMessage;
+import com.hyphenate.chat.EMMessageBody;
+import com.hyphenate.chat.EMTextMessageBody;
+import com.hyphenate.chat.EMVoiceMessageBody;
 import com.wds.adapter.EMMessageAdapter;
 import com.wds.base.BaseActivity;
 import com.wds.utils.AudioUtil;
@@ -22,6 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class ChatActivity extends BaseActivity {
@@ -37,12 +51,18 @@ public class ChatActivity extends BaseActivity {
     Button btnRecord;
     @BindView(R.id.btn_send_audio)
     Button btnSendAudio;
+    @BindView(R.id.btn_location)
+    Button btnLocation;
 
     private EMMessageAdapter emMessageAdapter;
     private String curName;
     private String toName;
     private EMMessageListener msgListener;
     private ArrayList<EMMessage> list;
+    private LocationClient mLocationClient;
+    private MapView mapView;
+    private BaiduMap baiduMap;
+    private BDLocation mLocation;
 
     @Override
     protected int getLayout() {
@@ -55,9 +75,10 @@ public class ChatActivity extends BaseActivity {
         toName = getIntent().getStringExtra(Constants.NAME);
         curName = (String) SharedPreferencesUtils.getParam(this, Constants.CURMAME, "a");
         tvTitle.setText(curName + "正在和" + toName + "聊天中...");
+        initLocation();
     }
 
-    @OnClick({R.id.btN_send, R.id.btn_record, R.id.btn_send_audio})
+    @OnClick({R.id.btN_send, R.id.btn_record, R.id.btn_send_audio,R.id.btn_location})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btN_send:
@@ -69,8 +90,73 @@ public class ChatActivity extends BaseActivity {
             case R.id.btn_send_audio:
                 audioSend();
                 break;
+            case R.id.btn_location:
+                location();
+                break;
         }
     }
+
+    private void location() {
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                double latitude = mLocation.getLatitude();
+                double longitude = mLocation.getLongitude();
+                //latitude为纬度，longitude为经度，locationAddress为具体位置内容
+                EMMessage message = EMMessage.createLocationSendMessage(latitude, longitude, "ditu", toName);
+               //如果是群聊，设置chattype，默认是单聊
+                EMClient.getInstance().chatManager().sendMessage(message);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                            list.add(message);
+                            emMessageAdapter.notifyDataSetChanged();
+                    }
+                });
+            }
+        }).start();
+    }
+    private void initLocation() {
+        mapView = new MapView(this);
+        baiduMap = mapView.getMap();
+        baiduMap.setMyLocationEnabled(true);
+        //定位初始化
+        mLocationClient = new LocationClient(this);
+
+        //通过LocationClientOption设置LocationClient相关参数
+        LocationClientOption option = new LocationClientOption();
+        option.setOpenGps(true); // 打开gps
+        option.setCoorType("bd09ll"); // 设置坐标类型
+        option.setScanSpan(1000);
+
+        //设置locationClientOption
+        mLocationClient.setLocOption(option);
+
+        //注册LocationListener监听器
+        MyLocationListener myLocationListener = new MyLocationListener();
+        mLocationClient.registerLocationListener(myLocationListener);
+        //开启地图定位图层
+        mLocationClient.start();
+    }
+    public class MyLocationListener extends BDAbstractLocationListener {
+        @Override
+        public void onReceiveLocation(BDLocation location) {
+            //mapView 销毁后不在处理新接收的位置
+            if (location == null || mapView == null) {
+                return;
+            }
+            mLocation = location;
+            MyLocationData locData = new MyLocationData.Builder()
+                    .accuracy(location.getRadius())
+                    // 此处设置开发者获取到的方向信息，顺时针0-360
+                    .direction(location.getDirection()).latitude(location.getLatitude())
+                    .longitude(location.getLongitude()).build();
+            baiduMap.setMyLocationData(locData);
+        }
+    }
+
+
 
     private void audioSend() {
         //voiceUri为语音文件本地资源标志符，length为录音时间(秒)
@@ -82,10 +168,10 @@ public class ChatActivity extends BaseActivity {
 
     private void record() {
         Boolean isRecording = AudioUtil.isRecording;
-        if (isRecording){
+        if (isRecording) {
             btnRecord.setText("开始录音");
             AudioUtil.stopRecording();
-        }else {
+        } else {
             btnRecord.setText("停止录音");
 
         }
@@ -125,7 +211,23 @@ public class ChatActivity extends BaseActivity {
         rv.setLayoutManager(new LinearLayoutManager(this));
         emMessageAdapter = new EMMessageAdapter(list, this, toName, curName);
         rv.setAdapter(emMessageAdapter);
+        emMessageAdapter.setOnItemClick(new EMMessageAdapter.OnItemClick() {
+            @Override
+            public void onItemClick(String localUrl, EMMessageBody emMessageBody) {
+                if (emMessageBody instanceof EMVoiceMessageBody){
 
+                }else if (emMessageBody instanceof EMLocationMessageBody){
+                    Intent intent = new Intent(ChatActivity.this, MapActivity.class);
+                    double latitude = ((EMLocationMessageBody) emMessageBody).getLatitude();
+                    double longitude = ((EMLocationMessageBody) emMessageBody).getLongitude();
+                    intent.putExtra("lat",latitude);
+                    intent.putExtra("long",longitude);
+                    startActivity(intent);
+                }
+
+
+            }
+        });
     }
 
     @Override
@@ -179,12 +281,12 @@ public class ChatActivity extends BaseActivity {
     protected void initHistory() {
         super.initHistory();
         EMConversation conversation = EMClient.getInstance().chatManager().getConversation(toName);
-        if (conversation==null){
+        if (conversation == null) {
             return;
         }
         //获取此回话的所有消息
         List<EMMessage> allMessages = conversation.getAllMessages();
-        if (allMessages.size()<=0){
+        if (allMessages.size() <= 0) {
             return;
         }
         list.addAll(allMessages);

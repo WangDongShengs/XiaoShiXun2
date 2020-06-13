@@ -1,18 +1,111 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.wds.fragment.DiscoveryFragment">
 
-    <!-- TODO: Update blank fragment layout -->
+   <LinearLayout
+       android:id="@+id/ll_zhihu"
+       android:orientation="horizontal"
+       app:layout_constraintTop_toTopOf="parent"
+       android:layout_margin="20dp"
+       android:layout_width="match_parent"
+       android:layout_height="60dp"
+       >
+    <ImageView
+        android:id="@+id/iv_zhihu"
+        android:layout_width="60dp"
+        android:src="@drawable/ic_drawer_zhihu"
+        android:layout_height="match_parent" />
+       <TextView
+           android:id="@+id/tv_zhihu"
+           android:layout_width="0dp"
+           android:layout_weight="1"
+           android:text="知乎日报"
+           android:gravity="center"
+           android:textColor="#000000"
+           android:textSize="20sp"
+           android:layout_height="match_parent"/>
+       <ImageView
+        android:layout_width="60dp"
+        android:src="@drawable/ic_keyboard"
+        android:layout_height="match_parent" />
+   </LinearLayout>
+      <LinearLayout
+       android:id="@+id/ll_it"
+       android:orientation="horizontal"
+       app:layout_constraintTop_toBottomOf="@id/ll_zhihu"
+          android:layout_margin="20dp"
+       android:layout_width="match_parent"
+       android:layout_height="60dp"
+       >
+          <ImageView
+              android:id="@+id/iv_it"
+              android:layout_width="60dp"
+              android:src="@drawable/ic_drawer_gold"
+              android:layout_height="match_parent" />
+          <TextView
+              android:id="@+id/tv_it"
+              android:layout_width="0dp"
+              android:layout_weight="1"
+              android:text="IT 咨询"
+              android:gravity="center"
+              android:textColor="#000000"
+              android:textSize="20sp"
+              android:layout_height="match_parent"/>
+          <ImageView
+              android:layout_width="60dp"
+              android:src="@drawable/ic_keyboard"
+              android:layout_height="match_parent" />
+   </LinearLayout>
+      <LinearLayout
+       android:id="@+id/ll_tencent"
+       android:orientation="horizontal"
+          android:layout_margin="20dp"
+       app:layout_constraintTop_toBottomOf="@id/ll_it"
+       android:layout_width="match_parent"
+       android:layout_height="60dp"
+       >
+          <ImageView
+              android:id="@+id/iv_tencent"
+              android:layout_width="60dp"
+              android:src="@drawable/ic_drawer_vtex"
+              android:layout_height="match_parent" />
+          <TextView
+              android:id="@+id/tv_tencent"
+              android:layout_width="0dp"
+              android:layout_weight="1"
+              android:text="腾讯新闻"
+              android:gravity="center"
+              android:textColor="#000000"
+              android:textSize="20sp"
+              android:layout_height="match_parent"/>
+          <ImageView
+              android:layout_width="60dp"
+              android:src="@drawable/ic_keyboard"
+              android:layout_height="match_parent" />
+   </LinearLayout>
+
+
+
+
+
+
+
+
+
+
+
     <Button
         android:id="@+id/login"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="登出"
+        app:layout_constraintBottom_toBottomOf="parent"
         android:layout_gravity="bottom"
         android:textColor="#ffff"
         android:background="#00BCD4"
         />
 
-</FrameLayout>
+</android.support.constraint.ConstraintLayout>

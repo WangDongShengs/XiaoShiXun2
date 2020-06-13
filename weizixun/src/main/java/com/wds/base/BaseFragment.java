@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-public abstract class BaseFragment<P extends BasePresenter , V extends BaseView>extends Fragment {
+public abstract class BaseFragment extends Fragment {
 
     private Unbinder bind;
 
@@ -20,16 +20,21 @@ public abstract class BaseFragment<P extends BasePresenter , V extends BaseView>
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View inflate = inflater.inflate(getLayout(), container, false);
         bind = ButterKnife.bind(this, inflate);
+        initMVP();
         initView();
         initData();
         return inflate;
     }
 
-    private void initData() {
+    protected void initMVP() {
 
     }
 
-    private void initView() {
+    protected void initData() {
+
+    }
+
+    protected void initView() {
 
     }
 
