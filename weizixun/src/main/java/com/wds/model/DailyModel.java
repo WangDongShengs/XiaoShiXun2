@@ -23,4 +23,14 @@ public class DailyModel extends BaseModel {
                     }
                 });
     }
+    public void dailyBeforeModel(String date,DailyCallBack dailyCallBack){
+        HttpManager.getHttpManager().getService(ApiService.zhihuUrl,ApiService.class).getBeForeLatestList(date)
+                .compose(RxUtil.rxFlowableTransformer())
+                .subscribe((FlowableSubscriber<? super DailyListBean>) new BaseObserver<DailyListBean>() {
+                    @Override
+                    public void onSuccess(DailyListBean dailyListBean) {
+                        dailyCallBack.onSuccess(dailyListBean);
+                    }
+                });
+    }
 }

@@ -8,7 +8,7 @@ import android.support.v4.view.ViewPager;
 import com.wds.base.BaseActivity;
 import com.wds.fragment.DailyFragment;
 import com.wds.fragment.HotFragment;
-import com.wds.fragment.TopicFragment;
+import com.wds.fragment.SectionFragment;
 
 import java.util.ArrayList;
 
@@ -30,7 +30,7 @@ public class ZhiHuActivity extends BaseActivity {
         super.initView();
         final ArrayList<Fragment> list = new ArrayList<>();
         list.add(new DailyFragment());
-        list.add(new TopicFragment());
+        list.add(new SectionFragment());
         list.add(new HotFragment());
         clViewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
             @Override

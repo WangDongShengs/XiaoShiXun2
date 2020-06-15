@@ -16,6 +16,9 @@ public class DailyPresenter extends BasePresenter implements DailyCallBack {
     public void dailyPresenter() {
         dailyModel.dailyModel(this);
     }
+    public void dailyBeforePresenter(String date){
+        dailyModel.dailyBeforeModel(date,this);
+    }
     @Override
     protected void initModel() {
         dailyModel = new DailyModel();

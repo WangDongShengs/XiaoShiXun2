@@ -93,4 +93,8 @@ dependencies {
     implementation files('libs/BaiduLBS_Android.jar')
     //将类文件转化为 dex 文件  将class 文件转化为二进制    
     implementation 'com.android.support:multidex:1.0.3'
+
+
+    //日历
+    implementation 'com.prolificinteractive:material-calendarview:1.4.3'
 }

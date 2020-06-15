@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +12,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.wds.bean.DailyListBean;
+import com.wds.weizixun.DailyDetailActivity;
 import com.wds.weizixun.R;
 import com.youth.banner.Banner;
 import com.youth.banner.BannerConfig;
@@ -25,8 +25,8 @@ public class DailyAdapter extends RecyclerView.Adapter {
     public static final int BANNER_STYLE = 0;
     public static final int LIST_STYLE = 2;
     public static final int DATE=1;
-    Context context;
-    String date;
+    private Context context;
+    private String date;
     private List<DailyListBean.TopStoriesBean> banner = new ArrayList<>();
     private List<DailyListBean.StoriesBean> storyList = new ArrayList<>();
     private List<String> list=new ArrayList<>();
@@ -44,7 +44,6 @@ public class DailyAdapter extends RecyclerView.Adapter {
             }
         }
     }
-
     public void setStoryList(List<DailyListBean.StoriesBean> storyList, String date) {
         this.date=date;
         this.storyList.addAll(storyList);
@@ -62,7 +61,7 @@ public class DailyAdapter extends RecyclerView.Adapter {
     public int getItemViewType(int position) {
         if (position == 0 && banner.size() > 0) {
             return BANNER_STYLE;
-        } else if ((position==0&banner.size()==0)||(position==1&&!TextUtils.isEmpty(date)&&banner.size()>0)){
+        } else if ((position==0&banner.size()==0)||(position==1&&banner.size()>0)){
             return DATE;
         }else {
             return LIST_STYLE;
@@ -104,7 +103,6 @@ public class DailyAdapter extends RecyclerView.Adapter {
                             }
                         }).start();
                 break;
-
             case DATE:
                 DateViewHolder dateViewHolder = (DateViewHolder) viewHolder;
                 dateViewHolder.text.setText(date);
@@ -113,16 +111,21 @@ public class DailyAdapter extends RecyclerView.Adapter {
                 if (banner.size()>0){
                     i=i-1;
                 }
-                if (!TextUtils.isEmpty(date)){
-                    i=i-1;
-                }
-                final DailyListBean.StoriesBean storiesBean = storyList.get(i);
+                //i-1 第二个布局永远都在，所有i-1
+                DailyListBean.StoriesBean storiesBean = storyList.get(i-1);
                 ListViewHolder listViewHolder = (ListViewHolder) viewHolder;
                 listViewHolder.title.setText(storiesBean.getTitle());
-                if (storiesBean.getImages() != null && storiesBean.getImages().size() > 0) {
-                    Glide.with(context).load(storiesBean.getImages().get(0)).into(((ListViewHolder) viewHolder).image);
-                }
-
+                Glide.with(context).load(storiesBean.getImages().get(0)).into(listViewHolder.image);
+                viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(context, DailyDetailActivity.class);
+                        intent.putExtra("ID",storiesBean.getId());
+                        intent.putExtra("title",storiesBean.getTitle());
+                        intent.putExtra("image",storiesBean.getImages().get(0));
+                        context.startActivity(intent);
+                    }
+                });
                 break;
         }
     }
@@ -130,10 +133,8 @@ public class DailyAdapter extends RecyclerView.Adapter {
     @Override
     public int getItemCount() {
         int size=banner.size()>0 ? storyList.size()+1: storyList.size();
-        if (!TextUtils.isEmpty(date)){
-            size=size+1;
-        }
-        return size;
+        //不管banner 是否存在，第二个布局都存在 storyList.size()要加1；
+        return size+1;
     }
 
     private class BannerViewHolder extends RecyclerView.ViewHolder {

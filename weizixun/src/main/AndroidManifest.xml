@@ -40,7 +40,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ZhiHuActivity"></activity>
+        <activity android:name=".DailyDetailActivity"></activity>
+        <activity android:name=".CalenderActivity" />
+        <activity android:name=".ZhiHuActivity" />
         <activity android:name=".WNaviGuideActivity" />
         <activity android:name=".MapActivity" />
         <activity android:name=".ChatGroupActivity" />

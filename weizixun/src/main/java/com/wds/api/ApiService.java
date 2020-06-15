@@ -1,8 +1,10 @@
 package com.wds.api;
 
 import com.wds.bean.DailyListBean;
+import com.wds.bean.HotListBean;
 import com.wds.bean.LoginBean;
 import com.wds.bean.RegisterBean;
+import com.wds.bean.SectionListBean;
 
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
@@ -53,21 +55,37 @@ public interface ApiService {
 
     String zhihuUrl = "http://news-at.zhihu.com/";
 
+    /**
+     * 日报
+     * @return
+     */
     @GET("api/4/news/latest")
     Flowable<DailyListBean> getLatestList();
 
+    /**
+     * 新的日报
+     * @param date
+     * @return
+     */
     @GET("api/4/news/before/{date}")
     Flowable<DailyListBean> getBeForeLatestList(@Path("date") String date);
-  /*  *//**
-     * 专栏日报
-     *//*
+   /**
+     * 专栏
+     */
     @GET("api/4/sections")
-    Observable<SectionListBean> getSectionList();
+    Flowable<SectionListBean> getSectionList();
 
+    /**
+     * 热门
+     */
+    @GET("api/4/news/hot")
+    Flowable<HotListBean> getHotList();
+
+   /*
     *//**
      * 日报详情
      * http://news-at.zhihu.com/api/4/news/9713242
      *//*
-    @GET("api/4/news/{id}")DailyListBean
+    @GET("api/4/news/{id}")
     Observable<DailyDetailBean> getDetailInfo(@Path("id") String id);*/
 }
