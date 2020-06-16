@@ -97,4 +97,6 @@ dependencies {
 
     //日历
     implementation 'com.prolificinteractive:material-calendarview:1.4.3'
+    //HtmlText
+    implementation 'org.sufficientlysecure:html-textview:3.9'
 }

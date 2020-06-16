@@ -1,5 +1,6 @@
 package com.wds.api;
 
+import com.wds.bean.DailyDetailBean;
 import com.wds.bean.DailyListBean;
 import com.wds.bean.HotListBean;
 import com.wds.bean.LoginBean;
@@ -81,11 +82,11 @@ public interface ApiService {
     @GET("api/4/news/hot")
     Flowable<HotListBean> getHotList();
 
-   /*
-    *//**
+
+    /**
      * 日报详情
      * http://news-at.zhihu.com/api/4/news/9713242
-     *//*
+     */
     @GET("api/4/news/{id}")
-    Observable<DailyDetailBean> getDetailInfo(@Path("id") String id);*/
+    Flowable<DailyDetailBean> getDetailList(@Path("id") int  id);
 }

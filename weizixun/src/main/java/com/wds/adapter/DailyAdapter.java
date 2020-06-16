@@ -121,8 +121,6 @@ public class DailyAdapter extends RecyclerView.Adapter {
                     public void onClick(View v) {
                         Intent intent = new Intent(context, DailyDetailActivity.class);
                         intent.putExtra("ID",storiesBean.getId());
-                        intent.putExtra("title",storiesBean.getTitle());
-                        intent.putExtra("image",storiesBean.getImages().get(0));
                         context.startActivity(intent);
                     }
                 });

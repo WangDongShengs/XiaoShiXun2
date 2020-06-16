@@ -1,9 +1,12 @@
 package com.wds.weizixun;
 
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -31,6 +34,7 @@ import com.wds.utils.AudioUtil;
 import com.wds.utils.Constants;
 import com.wds.utils.SharedPreferencesUtils;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,6 +67,8 @@ public class ChatActivity extends BaseActivity {
     private MapView mapView;
     private BaiduMap baiduMap;
     private BDLocation mLocation;
+    private long mTime;
+    private String mPath;
 
     @Override
     protected int getLayout() {
@@ -157,23 +163,44 @@ public class ChatActivity extends BaseActivity {
     }
 
 
-
+    //发送录音
     private void audioSend() {
-        //voiceUri为语音文件本地资源标志符，length为录音时间(秒)
-        //EMMessage message = EMMessage.createVoiceSendMessage(voiceUri, length, toChatUsername);
-        //如果是群聊，设置chattype，默认是单聊
-        //message.setChatType(EMMessage.ChatType.GroupChat);
-        //EMClient.getInstance().chatManager().sendMessage(message);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //voiceUri为语音文件本地资源标志符，length为录音时间(秒)
+                EMMessage message = EMMessage.createVoiceSendMessage(mPath, (int) mTime, toName);
+                EMClient.getInstance().chatManager().sendMessage(message);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        list.add(message);
+                        emMessageAdapter.notifyDataSetChanged();
+                    }
+                });
+            }
+        }).start();
     }
-
+    //录音
     private void record() {
-        Boolean isRecording = AudioUtil.isRecording;
+        boolean isRecording = AudioUtil.isRecording;
         if (isRecording) {
             btnRecord.setText("开始录音");
-            AudioUtil.stopRecording();
+            AudioUtil.stopRecord();
         } else {
             btnRecord.setText("停止录音");
+            AudioUtil.startRecord(new AudioUtil.ResultCallBack() {
+                @Override
+                public void onSuccess(String path, long time) {
+                    mPath = path;
+                    mTime = time;
+                }
 
+                @Override
+                public void onFail(String msg) {
+                    Log.e("TAG", msg);
+                }
+            });
         }
     }
 
@@ -215,7 +242,7 @@ public class ChatActivity extends BaseActivity {
             @Override
             public void onItemClick(String localUrl, EMMessageBody emMessageBody) {
                 if (emMessageBody instanceof EMVoiceMessageBody){
-
+                    playAudio(localUrl);
                 }else if (emMessageBody instanceof EMLocationMessageBody){
                     Intent intent = new Intent(ChatActivity.this, MapActivity.class);
                     double latitude = ((EMLocationMessageBody) emMessageBody).getLatitude();
@@ -229,7 +256,24 @@ public class ChatActivity extends BaseActivity {
             }
         });
     }
-
+    //播放录音
+    private void playAudio(String localUrl) {
+        MediaPlayer mediaPlayer = new MediaPlayer();
+        try {
+            boolean playing = mediaPlayer.isPlaying();
+            if (playing) {
+                mediaPlayer.pause();
+            }
+            if (TextUtils.isEmpty(localUrl)) {
+                return;
+            }
+            mediaPlayer.setDataSource(localUrl);
+            mediaPlayer.prepare();
+            mediaPlayer.start();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
     @Override
     protected void initReceiver() {
         super.initReceiver();
